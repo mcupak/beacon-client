@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat
 class BeaconSuccessTest extends BaseBeaconTest {
     @Override
     void setupMappings() {
-        MOCK_BOB_SERVER.stubFor(get(urlEqualTo("/"))
+        MOCK_BEACON_SERVER.stubFor(get(urlEqualTo("/"))
 
                 .willReturn(aResponse()
                 .withBody(Gson.toJson(TEST_BEACON))))

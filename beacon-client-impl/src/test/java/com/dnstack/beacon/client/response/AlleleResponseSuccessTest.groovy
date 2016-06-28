@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat
 class AlleleResponseSuccessTest extends BaseBeaconTest {
     @Override
     void setupMappings() {
-        MOCK_BOB_SERVER.stubFor(post(urlPathEqualTo("/$BEACON_REQUEST_PATH"))
+        MOCK_BEACON_SERVER.stubFor(post(urlPathEqualTo("/$BEACON_REQUEST_PATH"))
                 .withRequestBody(equalToJson(Gson.toJson(TEST_ALLELE_REQUEST)))
 
                 .willReturn(aResponse()

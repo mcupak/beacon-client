@@ -21,19 +21,19 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
  * @version 1.0
  */
 public abstract class BaseBeaconTest {
-    static final def MOCK_BOB_PORT = 8089
-    static final def MOCK_BOB_SERVER = new WireMockServer(wireMockConfig().port(MOCK_BOB_PORT))
+    static final def MOCK_BEACON_PORT = 8089
+    static final def MOCK_BEACON_SERVER = new WireMockServer(wireMockConfig().port(MOCK_BEACON_PORT))
     static final BeaconClientImpl CLIENT
     static final boolean MOCKED_TESTING
 
     /**
-     * Define if the testing will be against real Beacon Network server, or the mocked one.
+     * Define if the testing will be against real Beacon server, or the mocked one.
      */
     static {
         def beaconTestUrl = System.properties.getProperty("beacon.test.url")
         MOCKED_TESTING = StringUtils.isBlank(beaconTestUrl)
         CLIENT = MOCKED_TESTING ?
-                new BeaconClientImpl(new URL("http", "localhost", MOCK_BOB_PORT, "")) :
+                new BeaconClientImpl(new URL("http", "localhost", MOCK_BEACON_PORT, "")) :
                 new BeaconClientImpl(beaconTestUrl)
 
     }
@@ -41,21 +41,21 @@ public abstract class BaseBeaconTest {
     @BeforeSuite
     void startServer() {
         if (MOCKED_TESTING) {
-            MOCK_BOB_SERVER.start();
+            MOCK_BEACON_SERVER.start();
         }
     }
 
     @AfterSuite
     void stopServer() {
         if (MOCKED_TESTING) {
-            MOCK_BOB_SERVER.stop();
+            MOCK_BEACON_SERVER.stop();
         }
     }
 
     @AfterMethod
     void resetMappings() {
         if (MOCKED_TESTING) {
-            MOCK_BOB_SERVER.resetMappings();
+            MOCK_BEACON_SERVER.resetMappings();
         }
     }
 
