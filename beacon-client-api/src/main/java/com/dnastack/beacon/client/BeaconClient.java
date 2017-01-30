@@ -17,6 +17,9 @@ public interface BeaconClient {
 
     /**
      * Gets beacon information.
+     *
+     * @return beacon information
+     * @throws InternalException when an internal error occurs
      */
     Beacon getBeacon() throws InternalException;
 
@@ -34,6 +37,8 @@ public interface BeaconClient {
      * @param datasetIds              identifiers of datasets. If this field is null, all datasets will be queried.
      * @param includeDatasetResponses indicator of whether responses for individual datasets should be included (not null)
      *                                in the response. If null, the default value of false is assumed.
+     * @return beacon allele response
+     * @throws InternalException when an internal error occurs
      */
     BeaconAlleleResponse getBeaconAlleleResponse(String referenceName, long start, String referenceBases, String alternateBases, String assemblyId, List<String> datasetIds, boolean includeDatasetResponses) throws InternalException;
 }
