@@ -12,9 +12,11 @@ import retrofit2.http.POST;
  * Underlying Beacon API for Retrofit.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
+ * @author Miro Cupak (mirocupak@gmail.com)
  * @version 1.0
  */
 public interface BeaconRetroService {
+
     String BEACON_REQUEST_PATH = "query";
 
     @GET(".")

@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat
 
 /**
  * @author Artem (tema.voskoboynick@gmail.com)
+ * @author Miro Cupak (mirocupak@gmail.com)
  * @version 1.0
  */
 class AlleleResponseSuccessTest extends BaseBeaconTest {

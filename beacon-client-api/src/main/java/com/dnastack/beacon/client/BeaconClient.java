@@ -10,9 +10,11 @@ import java.util.List;
  * Beacon client API.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
+ * @author Miro Cupak (mirocupak@gmail.com)
  * @version 1.0
  */
 public interface BeaconClient {
+
     /**
      * Gets beacon information.
      */
@@ -33,7 +35,5 @@ public interface BeaconClient {
      * @param includeDatasetResponses indicator of whether responses for individual datasets should be included (not null)
      *                                in the response. If null, the default value of false is assumed.
      */
-    BeaconAlleleResponse getBeaconAlleleResponse(String referenceName, long start, String referenceBases,
-                                                 String alternateBases, String assemblyId, List<String> datasetIds,
-                                                 boolean includeDatasetResponses) throws InternalException;
+    BeaconAlleleResponse getBeaconAlleleResponse(String referenceName, long start, String referenceBases, String alternateBases, String assemblyId, List<String> datasetIds, boolean includeDatasetResponses) throws InternalException;
 }

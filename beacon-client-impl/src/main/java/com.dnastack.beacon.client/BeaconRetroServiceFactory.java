@@ -12,9 +12,11 @@ import java.util.concurrent.TimeUnit;
  * to the server directly. These http clients are implemented by Retrofit at runtime.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
+ * @author Miro Cupak (mirocupak@gmail.com)
  * @version 1.0
  */
 public class BeaconRetroServiceFactory {
+
     /**
      * GsonConverterFactory is thread-safe. Can declare it static.
      */
@@ -24,24 +26,26 @@ public class BeaconRetroServiceFactory {
      * OkHttpClient is thread-safe. Can declare it static.
      * Set read timeout to 5 minutes as querying beacons may take quite a long time.
      */
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder()
-            .readTimeout(5, TimeUnit.MINUTES)
-            .addNetworkInterceptor(chain -> {
-                Request request = chain.request().newBuilder()
-                        .addHeader("Accept", "application/json")
-                        .build();
-                return chain.proceed(request);
-            }).build();
-
-    private BeaconRetroServiceFactory() {
-    }
+    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient.Builder().readTimeout(5, TimeUnit.MINUTES)
+                                                                              .addNetworkInterceptor(chain -> {
+                                                                                  Request request = chain.request()
+                                                                                                         .newBuilder()
+                                                                                                         .addHeader(
+                                                                                                                 "Accept",
+                                                                                                                 "application/json")
+                                                                                                         .build();
+                                                                                  return chain.proceed(request);
+                                                                              })
+                                                                              .build();
 
     public static BeaconRetroService create(String serviceBaseUrl) {
-        return new Retrofit.Builder()
-                .client(HTTP_CLIENT)
-                .addConverterFactory(CONVERTER_FACTORY)
-                .baseUrl(serviceBaseUrl)
-                .build()
-                .create(BeaconRetroService.class);
+        return new Retrofit.Builder().client(HTTP_CLIENT)
+                                     .addConverterFactory(CONVERTER_FACTORY)
+                                     .baseUrl(serviceBaseUrl)
+                                     .build()
+                                     .create(BeaconRetroService.class);
+    }
+
+    private BeaconRetroServiceFactory() {
     }
 }

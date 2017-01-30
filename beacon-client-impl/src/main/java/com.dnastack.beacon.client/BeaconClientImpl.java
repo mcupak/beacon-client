@@ -18,10 +18,44 @@ import java.util.List;
  * The implementation is thread-safe except one operation - change of the service base url.
  *
  * @author Artem (tema.voskoboynick@gmail.com)
+ * @author Miro Cupak (mirocupak@gmail.com)
  * @version 1.0
  */
 public class BeaconClientImpl implements BeaconClient {
+
     private BeaconRetroService beaconRetroService;
+
+    private static <T> T executeCall(Call<T> call) throws InternalException {
+        Response<T> response;
+        try {
+            response = call.execute();
+        } catch (IOException | RuntimeException e) {
+            throw new InternalException("Error during communication to server.", e);
+        }
+
+        if (response.isSuccessful()) {
+            return response.body();
+        } else {
+            throw new InternalException(String.format("Received error response from server. HTTP code: %s",
+                                                      response.code()));
+        }
+    }
+
+    /**
+     * Checks if referenceName is one of the accepted values: 1-22, X, Y.
+     */
+    private static boolean isReferenceNameValid(String referenceName) {
+        try {
+            int numeric = Integer.parseInt(referenceName);
+            return numeric >= 1 && numeric <= 22;
+        } catch (NumberFormatException e) {
+            return referenceName.equals("X") || referenceName.equals("Y");
+        }
+    }
+
+    private static void checkNotNullOrEmpty(String value, String valueName) {
+        Preconditions.checkArgument(StringUtils.isNotBlank(value), valueName + " mustn't be null or empty.");
+    }
 
     /**
      * Creates a Beacon client with the specified service base url.
@@ -59,58 +93,24 @@ public class BeaconClientImpl implements BeaconClient {
     }
 
     @Override
-    public BeaconAlleleResponse getBeaconAlleleResponse(String referenceName, long start, String referenceBases,
-                                                        String alternateBases, String assemblyId, List<String> datasetIds,
-                                                        boolean includeDatasetResponses) throws InternalException {
+    public BeaconAlleleResponse getBeaconAlleleResponse(String referenceName, long start, String referenceBases, String alternateBases, String assemblyId, List<String> datasetIds, boolean includeDatasetResponses) throws InternalException {
         checkNotNullOrEmpty(referenceName, "referenceName");
         checkNotNullOrEmpty(referenceBases, "referenceBases");
         checkNotNullOrEmpty(alternateBases, "alternateBases");
         checkNotNullOrEmpty(assemblyId, "assemblyId");
-        Preconditions.checkArgument(start > 0, "start should be non-negative number.");
+        Preconditions.checkArgument(start >= 0, "start should be non-negative number.");
         Preconditions.checkArgument(isReferenceNameValid(referenceName),
-                "referenceName is not valid. Valid values: 1-22, X, Y.");
+                                    "referenceName is not valid. Valid values: 1-22, X, Y.");
 
         BeaconAlleleRequest request = BeaconAlleleRequest.newBuilder()
-                .setReferenceName(referenceName)
-                .setStart(start)
-                .setReferenceBases(referenceBases)
-                .setAlternateBases(alternateBases)
-                .setAssemblyId(assemblyId)
-                .setDatasetIds(datasetIds)
-                .setIncludeDatasetResponses(includeDatasetResponses)
-                .build();
+                                                         .setReferenceName(referenceName)
+                                                         .setStart(start)
+                                                         .setReferenceBases(referenceBases)
+                                                         .setAlternateBases(alternateBases)
+                                                         .setAssemblyId(assemblyId)
+                                                         .setDatasetIds(datasetIds)
+                                                         .setIncludeDatasetResponses(includeDatasetResponses)
+                                                         .build();
         return executeCall(beaconRetroService.getBeaconAlleleResponse(request));
-    }
-
-    private static <T> T executeCall(Call<T> call) throws InternalException {
-        Response<T> response;
-        try {
-            response = call.execute();
-        } catch (IOException | RuntimeException e) {
-            throw new InternalException("Error during communication to server.", e);
-        }
-
-        if (response.isSuccessful()) {
-            return response.body();
-        } else {
-            throw new InternalException(String.format("Received error response from server. HTTP code: %s",
-                    response.code()));
-        }
-    }
-
-    /**
-     * Checks if referenceName is one of the accepted values: 1-22, X, Y.
-     */
-    private static boolean isReferenceNameValid(String referenceName) {
-        try {
-            int numeric = Integer.parseInt(referenceName);
-            return numeric >= 1 && numeric <= 22;
-        } catch (NumberFormatException e) {
-            return referenceName.equals("X") || referenceName.equals("Y");
-        }
-    }
-
-    private static void checkNotNullOrEmpty(String value, String valueName) {
-        Preconditions.checkArgument(StringUtils.isNotBlank(value), valueName + " mustn't be null or empty.");
     }
 }

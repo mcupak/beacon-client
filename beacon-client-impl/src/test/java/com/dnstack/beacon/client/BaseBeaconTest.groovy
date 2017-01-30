@@ -18,6 +18,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
  * {@link com.dnstack.beacon.client.BaseBeaconTest#isIntegrationTestingSupported()}
  *
  * @author Artem (tema.voskoboynick@gmail.com)
+ * @author Miro Cupak (mirocupak@gmail.com)
  * @version 1.0
  */
 public abstract class BaseBeaconTest {
